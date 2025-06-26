@@ -38,6 +38,13 @@ This processor has been successfully implemented on the **Basys 3 FPGA board**. 
 
 ---
 
+<p align="center">
+  <a href="https://youtu.be/16mvLp_AaZ0">
+    <img src="https://img.youtube.com/vi/16mvLp_AaZ0/maxresdefault.jpg" alt="Watch the demo" width="600"/>
+  </a>
+</p>
+
+
 ## Architecture Overview
 
 The single-cycle processor executes one instruction per clock cycle. It includes the following modules:
