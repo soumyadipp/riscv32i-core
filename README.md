@@ -34,7 +34,7 @@ This processor has been successfully implemented on the **Basys 3 FPGA board**. 
   - Clock pulse indicator via `U19` LED
   - LED indicators for program end and debug mode
 
-📖 **For step-by-step usage instructions and debug mode operation, refer to the `RISCV_Scroll_Menu_Manual.txt` in this repository.**
+📖 **For step-by-step usage instructions and debug mode operation, refer to the [`RISCV_Scroll_Menu_Manual.txt`](./RISCV_operation_mannual_BASYS3.txt) in this repository.**
 
 ---
 
