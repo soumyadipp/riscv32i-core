@@ -39,8 +39,8 @@ This processor has been successfully implemented on the **Basys 3 FPGA board**. 
 ---
 
 <p align="center">
-  <a href="https://youtu.be/16mvLp_AaZ0">
-    <img src="https://img.youtube.com/vi/16mvLp_AaZ0/maxresdefault.jpg" alt="Watch the demo" width="600"/>
+  <a href="https://youtu.be/ICoTxWUAC34">
+    <img src="https://img.youtube.com/vi/ICoTxWUAC34/maxresdefault.jpg" alt="Watch the demo" width="600"/>
   </a>
 </p>
 
@@ -59,6 +59,12 @@ The single-cycle processor executes one instruction per clock cycle. It includes
 - **Write-back Logic**: Returns ALU or memory result to registers
 
 ---
+
+<p align="center">
+  <a href="https://youtu.be/16mvLp_AaZ0">
+    <img src="https://img.youtube.com/vi/16mvLp_AaZ0/maxresdefault.jpg" alt="Watch the demo" width="600"/>
+  </a>
+</p>
 
 ## Prerequisites
 
