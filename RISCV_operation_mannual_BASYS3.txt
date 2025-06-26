@@ -1,0 +1,72 @@
+Operation Manual
+System: RISC-V Debug Scroll Interface
+Platform: Basys 3 FPGA
+
+Purpose:
+This system allows you to inspect memory and register contents of your RISC-V processor using the 7-segment display and navigation buttons on the Basys 3 board.
+
+Button Functions:
+- BTNU: Scroll Up (Increment address pointer)
+- BTND: Scroll Down (Decrement address pointer)
+- BTNL: Switch to Register Mode
+- BTNR: Switch to Memory Mode
+- BTNC: Toggle between Address View and Data View
+
+Display Behavior:
+
+1. Address View (default)
+- Memory Mode: Displays 'AD' followed by address in hex (e.g., AD00 to ADFF)
+- Register Mode: Displays 'AE' followed by address in hex (e.g., AE00 to AE1F)
+
+2. Data View (After pressing BTNC)
+- Displays the lower 16 bits of the selected memory word (in Memory Mode) or register value (in Register Mode)
+- Toggle back to address view by pressing BTNC again
+
+After pressing BTNC to enter data view, you can press it again to return to address view. To exit scroll mode and resume program execution, turn ON the V15 switch (clkEnable). To restart the program, pulse the reset using the W16 switch (one clock cycle), then turn ON V15 again.
+
+Operating Modes:
+
+Memory Mode:
+- Access memory words at address = index × 4
+- Index range: 0 to 255 (wrap-around supported)
+
+Register Mode:
+- Access register values at index
+- Index range: 0 to 31 (wrap-around supported)
+
+The scroll menu starts in Register Mode by default after reset. Use BTNL and BTNR to switch between register and memory modes.
+Address wraps around at boundaries. For example, scrolling down from 0 goes to the maximum address (31 for registers, 255 for memory) and vice versa.
+
+Processor Operation and Control:
+
+- The reset button (W16) resets the system.
+- When V15 (clkEnable) switch is ON, the processor executes the program and the 7-segment display shows the PC (Program Counter) value.
+- The clock pulses for the processor are indicated by the U19 LED.
+- When the processor reaches an EBREAK instruction (typically placed at the end of the program), it halts execution and displays "EB" on the 7-segment display.
+- Program execution completion is also indicated by turning ON the LED at pin P3.
+
+Debug Menu Operation:
+
+- When V15 (clkEnable) is OFF, the system enters scroll menu mode.
+- In scroll mode, use BTNU and BTND to scroll through memory/register addresses with wrap-around behavior.
+- Use BTNL and BTNR to switch between register and memory mode.
+- Press BTNC to toggle between address view and data view.
+
+Restarting Program Execution:
+
+To restart the program execution after a halt:
+1. Turn OFF V15 to exit execution mode.
+2. Press the reset button (W16) for one clock pulse.
+3. Turn ON V15 again to begin execution from the start of the program.
+
+Power & Clock Info:
+- slow_clk drives the processor
+- scroll_clk drives menu actions when debug mode is active (clkEnable = 0)
+
+Example Usage:
+
+1. Turn ON V15 to enter execution mode and run program
+2. Observe PC on 7-segment and clock on U19 LED
+3. When EBREAK is hit, processor halts, shows "EB", and P3 LED turns ON
+4. Turn OFF V15 and use scroll menu with BTNU/BTND/BTNC to explore memory/registers (wrap-around scrolling enabled)
+5. To rerun program, turn OFF V15, pulse reset with W16, and turn ON V15 again
