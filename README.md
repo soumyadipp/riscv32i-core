@@ -15,6 +15,7 @@ This repository contains a fully synthesizable **single-cycle RISC-V RV32I proce
 - Simple **testbench setup** for simulation
 
 ---
+<p align="center"><img src="img/mem_addr.jpg" alt="RISCV-MemAddr" width="800" height="500"/></p>
 
 ## Basys 3 Implementation
 
