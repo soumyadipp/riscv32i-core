@@ -1,77 +1,137 @@
-# Single-Cycle RISC-V RV32I Core
-
-This repository contains a fully synthesizable **single-cycle RISC-V RV32I processor** core, implemented from scratch in Verilog. The design adheres to the base 32-bit integer instruction set (RV32I) defined by the RISC-V specification.
 
 ---
 
-## Features
+# Single-Cycle & Pipelined RISC-V RV32I Processor Cores
 
-- Implements the full **RV32I** instruction set
-- **Single-cycle execution** — each instruction completes in one clock cycle
-- Written in **Verilog HDL**
-- Modular design (datapath, control unit, ALU, register file, etc.)
-- Compatible with **FPGA synthesis** (tested on Xilinx Basys 3)
-- Sample instruction memory initialization file and programs included
-- Simple **testbench setup** for simulation
+This repository contains fully synthesizable **single-cycle** and **five-stage pipelined** RISC-V RV32I processor cores, implemented from scratch in **Verilog HDL**. Both designs adhere to the base 32-bit integer instruction set (RV32I) defined by the RISC-V specification and are deployable on the **Basys 3 FPGA** development board.
 
 ---
-<p align="center"><img src="img/mem_addr.jpg" alt="RISCV-MemAddr" width="800" height="500"/></p>
 
-## Basys 3 Implementation
+## 🔧 Features
 
-This processor has been successfully implemented on the **Basys 3 FPGA board**. Key features of the FPGA implementation include:
+✅ Implements the complete **RV32I** instruction set
 
-- Hardware-mapped **seven-segment display** showing PC value or debug data
-- Use of onboard **switches and buttons** for:
-  - Reset (`W16`)
-  - Clock enable (`V15`)
-  - Memory/Register debug scrolling via BTNU, BTND, BTNL, BTNR, BTNC
-- Real-time **debug interface**:
-  - View memory and register contents
-  - Switch between address and data view
-  - Program completion detection (via `EB` display and LED on pin `P3`)
-- Execution status is visualized:
-  - Clock pulse indicator via `U19` LED
-  - LED indicators for program end and debug mode
+✅ Developed in **Verilog HDL** using a modular architecture
 
-📖 **For step-by-step usage instructions and debug mode operation, refer to the [`RISCV_Scroll_Menu_Manual.txt`](./RISCV_operation_mannual_BASYS3.txt) in this repository.**
+✅ Supports both **single-cycle** and **pipelined** microarchitectures
+
+✅ Fully synthesizable and tested on **Basys 3 (Artix-7)**
+
+✅ Built-in **hardware debug interface** with 7-segment display and buttons
+
+✅ Vivado simulation/testbench-ready
 
 ---
+
+## 🧠 Architectures Implemented
+
+### 🟢 Single-Cycle Processor
+
+* **One instruction per clock cycle**
+* Simple control and datapath logic
+* Ideal for learning and debugging
+
+### 🔵 Pipelined Processor (5-Stage)
+
+* Implements the standard **IF–ID–EX–MEM–WB** pipeline stages
+* Includes **hazard detection** and **data forwarding** units
+* Improves performance with an observed **speedup of 1.4×**
+* Maximum frequency: **\~60.2 MHz** (vs. 31.25 MHz in single-cycle design)
+
+### CPI Measurement
+
+The **CPI (Cycles Per Instruction)** of the pipelined processor was determined by running a mixed set of 14 RISC-V instructions containing arithmetic, memory, and control operations. The average CPI was measured to be **\~1.36**, confirming efficient pipelining behavior.
+
+---
+
+## ⬛ Basys 3 FPGA Implementation
+
+Both processor versions are integrated with a **real-time debug interface** that operates via onboard components:
+
+| Component             | Function                                   |
+| --------------------- | ------------------------------------------ |
+| **W16**               | Reset (one-pulse)                          |
+| **V15**               | Clock Enable / Execution Toggle            |
+| **BTNU/BTND**         | Scroll through register or memory indices  |
+| **BTNL/BTNR**         | Switch between memory/register views       |
+| **BTNC**              | Toggle between address and value display   |
+| **7-Segment Display** | Shows PC, register/memory values or EBREAK |
+| **LED P3**            | Indicates program termination (via EBREAK) |
+| **LED U19**           | Blinks with active clock                   |
+
+📘 See [`RISCV_Scroll_Menu_Manual.txt`](./RISCV_operation_mannual_BASYS3.txt) for full operation guide.
+
+---
+
+## 📊 Resource Utilization Comparison
+
+| Metric              | Single-Cycle | Pipelined    |
+| ------------------- | ------------ | ------------ |
+| **Slice LUTs**      | 1543 (7.42%) | 1802 (8.66%) |
+| **Slice Registers** | 1123 (2.70%) | 1628 (3.91%) |
+| **F7 Muxes**        | 449          | 448          |
+| **F8 Muxes**        | 108          | 137          |
+
+📌 *The pipelined design shows moderate resource increase due to stage registers and hazard handling units, while offering significantly improved throughput.*
+
+---
+
+## 🧩 Modular Design
+
+Both designs are built using modular Verilog components:
+
+* **Program Counter (PC)**
+* **Instruction Memory (.coe ROM)**
+* **Control Unit**
+* **ALU**
+* **Immediate Generator**
+* **Register File**
+* **Data Memory**
+* **Writeback Logic**
+* **Hazard Detection Unit** *(pipelined only)*
+* **Forwarding Unit** *(pipelined only)*
+
+---
+
+## 🛠️ Requirements
+
+* **Vivado** (Design, Synthesis, Simulation, Bitstream Generation)
+* (Optional) **RISC-V Toolchain** for generating binary/test programs
+* **.coe file generator** or precompiled assembly instructions
+
+---
+
+## 📷 Demo Videos
 
 <p align="center">
   <a href="https://youtu.be/ICoTxWUAC34">
-    <img src="https://img.youtube.com/vi/ICoTxWUAC34/maxresdefault.jpg" alt="Watch the demo" width="600"/>
+    <img src="https://img.youtube.com/vi/ICoTxWUAC34/maxresdefault.jpg" alt="Single-Cycle Demo" width="600"/>
   </a>
 </p>
-
-
-## Architecture Overview
-
-The single-cycle processor executes one instruction per clock cycle. It includes the following modules:
-
-- **Instruction Memory**: ROM holding preloaded `.hex` instructions
-- **Program Counter (PC)**: 32-bit counter pointing to current instruction
-- **Control Unit**: Generates control signals based on the opcode
-- **Immediate Generator**: Extracts and sign-extends immediates
-- **Register File**: 31 general-purpose registers (`x1`–`x31`) and 2 Special registers(`x0`–`PC`)
-- **ALU**: Performs arithmetic and logical operations
-- **Data Memory**: For load and store operations
-- **Write-back Logic**: Returns ALU or memory result to registers
-
----
 
 <p align="center">
   <a href="https://youtu.be/16mvLp_AaZ0">
-    <img src="https://img.youtube.com/vi/16mvLp_AaZ0/maxresdefault.jpg" alt="Watch the demo" width="600"/>
+    <img src="https://img.youtube.com/vi/16mvLp_AaZ0/maxresdefault.jpg" alt="Pipelined Demo" width="600"/>
   </a>
 </p>
 
-## Prerequisites
+---
 
-- **Vivado** (for simulation, synthesis and FPGA deployment)
-- **RISC-V toolchain** (optional, for compiling test programs)
+## 📚 Documentation
+
+* [`RISC-V.pdf`](./RISC-V.pdf) — Full architecture explanation, datapaths, and control logic
+* [`RISCV_Scroll_Menu_Manual.txt`](./RISCV_operation_mannual_BASYS3.txt) — Operation guide for FPGA debug interface
 
 ---
 
-📘 **For a detailed explanation of the architecture, dataflow, and control logic, refer to [`RISC-V.pdf`](./RISC-V.pdf)**  
-📘 **To operate the processor on Basys 3 hardware, see the [`RISCV_Scroll_Menu_Manual.txt`](./RISCV_operation_mannual_BASYS3.txt) file.**
+## 💡 Future Improvements
+
+* Add support for **RISC-V M extension** (multiply/divide)
+* Implement **compressed (C) instruction set**
+* Introduce **basic branch prediction**
+* Add **instruction/data cache units**
+* Develop a **UART-based serial monitor interface**
+
+---
+
+Let me know if you want me to generate a `.md` file or edit your repo directly!
