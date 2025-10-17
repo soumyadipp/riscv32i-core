@@ -133,5 +133,3 @@ Both designs are built using modular Verilog components:
 * Develop a **UART-based serial monitor interface**
 
 ---
-
-Let me know if you want me to generate a `.md` file or edit your repo directly!
